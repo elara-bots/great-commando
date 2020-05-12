@@ -29,7 +29,9 @@ module.exports = class HelpCommand extends Command {
 
     async run(msg, args) { 
       try{
-		if(!msg.channel.permissionsFor(this.client.user.id).has('ADD_REACTIONS')) return this.client.send(msg, `Sorry but I'm unable to send the help message, I don't have "Add Reactions" in this channel. 🙁`)
+        if(msg.guild){
+        if(!msg.channel.permissionsFor(this.client.user.id).has('ADD_REACTIONS')) return this.client.send(msg, `Sorry but I'm unable to send the help message, I don't have "Add Reactions" in this channel. 🙁`)
+        }
 		let color = msg.guild ? msg.guild.me.displayHexColor === "#000000" ? 0xFFBF00 : msg.guild.me.displayColor : 0xFFBF00;
         let user = this.client.user;
         const groups = this.client.registry.groups;
@@ -42,7 +44,7 @@ module.exports = class HelpCommand extends Command {
 			},
 			color: color,
 			title: `All Groups`,
-			description: `${groups.map(c => `${c.name} (${c.id}) [${c.commands.size}]`).join('\n')}`
+			description: `${groups.map(c => `${c.name} (\`${c.id}\`): ${c.commands.size} commands`).join('\n')}`
 		}})
         if(args.command && !showAll){
              if(commands.length === 1){

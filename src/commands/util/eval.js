@@ -46,26 +46,26 @@ module.exports = class EvalCommand extends Command {
 	        }
         const doReply = val => {
             if (val instanceof Error) {
-                return msg.embed({embed: {
+                return msg.channel.send({embed: {
                     author: {
                         name: this.client.user.tag,
                         icon_url: this.client.user.displayAvatarURL
                     },
                     timestamp: new Date(),
                     color: color,
-                    description: err,
+                    description: val ? val :"undefined",
                     title: `[Callback] - Error`
                 }});
             } else {
                 const result = this.makeResultMessages(val, process.hrtime(this.hrStart));
                 if (Array.isArray(result)) {
                     for (const item of result) {
-                        if (this.client.options.selfbot) msg.say(item); else msg.say(item);
+                        if (this.client.options.selfbot) msg.channel.send(item); else msg.channel.send(item);
                     }
                 } else if (this.client.options.selfbot) {
-                    msg.say(result);
+                    msg.channel.send(result);
                 } else {
-                    msg.say(result);
+                    msg.channel.send(result);
                 }
             }
         };
@@ -75,14 +75,14 @@ module.exports = class EvalCommand extends Command {
             this.lastResult = eval(script);
             hrDiff = process.hrtime(hrStart);
         } catch (err) {
-            return msg.embed({embed: {
+            return msg.channel.send({embed: {
                 author: {
                     name: this.client.user.tag,
                     icon_url: this.client.user.displayAvatarURL
                 },
                 timestamp: new Date(),
                 color: 0xFF0000,
-                description: err,
+                description: err.message ? err.message : "undefined",
                 title: `[Script] - Error`
             }});
         }
@@ -93,17 +93,16 @@ module.exports = class EvalCommand extends Command {
         if (msg.editable) {
             if (response instanceof Array) {
                 if (response.length > 0) response = response.slice(1, response.length - 1);
-                for (const re of response) msg.say(re);
+                for (const re of response) msg.channel.send(re);
                 return null;
             } else {
-                return msg.embed({embed: {
+                return msg.channel.send({embed: {
                     author: {
                         name: this.client.user.tag,
                         icon_url: this.client.user.displayAvatarURL
                     },
                     timestamp: new Date(),
                     color: color,
-                    description: err,
                     title: `Result`,
                     description: response,
                     footer: {
@@ -112,14 +111,13 @@ module.exports = class EvalCommand extends Command {
                 }});
             }
         }else{
-            return msg.embed({embed: {
+            return msg.channel.send({embed: {
                 author: {
                     name: this.client.user.tag,
                     icon_url: this.client.user.displayAvatarURL
                 },
                 timestamp: new Date(),
                 color: color,
-                description: err,
                 title: `Result`,
                 description: response,
                 footer: {

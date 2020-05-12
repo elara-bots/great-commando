@@ -35,6 +35,7 @@ Additionally, it makes full use of ES2017's `async`/`await` functionality for cl
 - Added: `client.send(message, "Your content here")` as a short way to send embeds to the channel.
 - Added: `duration` to the types to use.
 - Added: `dmOnly` to the command constructor, for commands that require to be used in DMs only.
+- Fixed: `filterArray` deprecation issue.
 - Updated: `help` to not spam your dms and use a the RichDisplay reaction page. 😎
 
 ## Installation

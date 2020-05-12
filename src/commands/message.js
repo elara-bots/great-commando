@@ -119,28 +119,30 @@ class CommandMessage {
 			!this.message.webhookID) {
 			this.message.member = await this.message.guild.fetchMember(this.message.author);
 		}
-			send = (content, color) => {
-			if(this.message.channel.permissionsFor(this.client.user).has("EMBED_LINKS")){
-				return this.say({embed: {
-					author: {
-						name: this.message.guild.name,
-						icon_url: this.message.guild.iconURL
-					},
-					title: `INFO`,
-					description: content,
-					color: color,
-					timestamp: new Date()
-				}}).catch(() => {});
+			let send = (content, color) => {
+			let embed = {embed: {
+				author: {
+					name: this.guild ? this.guild.name : this.message.author.tag,
+					icon_url: this.guild ? this.guild.iconURL : this.message.author.displayAvatarURL
+				},
+				title: `INFO`,
+				description: content,
+				color: color,
+				timestamp: new Date()
+			}}
+			if(!this.guild) return this.say(embed);
+			if(this.channel.permissionsFor(this.client.user).has("EMBED_LINKS")){
+				return this.say(embed).catch(() => {});
 			}else{
 				this.say(content).catch(() => {});
 			}
 		}
-		if(this.command.dmOnly && this.message.guild){
+		if(this.command.dmOnly && this.guild){
 			this.client.emit("commandBlocked", this, "dmOnly");
 			return send(`Command (\`${this.command.name}\`) can only be used in a DM channel.`, 0xFF0000)
 		}
 		// Make sure the command is usable
-		if(this.command.guildOnly && !this.message.guild) {
+		if(this.command.guildOnly && !this.guild) {
 			/**
 			 * Emitted when a command is prevented from running
 			 * @event CommandoClient#commandBlocked
@@ -152,7 +154,7 @@ class CommandMessage {
 			return send(`Command (\`${this.command.name}\`) can only be used in a server channel`, 0xFF0000);
 		}
 
-		if(this.command.nsfw && !this.message.channel.nsfw) {
+		if(this.command.nsfw && !this.channel.nsfw) {
 			this.client.emit('commandBlocked', this, 'nsfw');
 			return send(`Command (\`${this.command.name}\`) can only be used in a channel marked as NSFW.`, 0xFF0000);
 		}
@@ -212,7 +214,7 @@ class CommandMessage {
 
 		// Run the command
 		if(throttle) throttle.usages++;
-		const typingCount = this.message.channel.typingCount;
+		const typingCount = this.channel.typingCount;
 		try {
 			this.client.emit('debug', `Running command ${this.command.groupID}:${this.command.memberName}.`);
 			const promise = this.command.run(this, args, fromPattern);
