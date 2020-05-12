@@ -1,14 +1,14 @@
 {
 	"name": "great-commando",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"description": "The modified command framework for Discord.js",
 	"author": "SUPERCHIEFYT (Elara-Discord-Bots)",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/elara-bots/better-commando.git"
+		"url": "https://github.com/elara-bots/great-commando.git"
 	},
 	"bugs": {
-		"url": "https://github.com/elara-bots/better-commando/issues"
+		"url": "https://github.com/elara-bots/great-commando/issues"
 	},
 	"keywords": [
 		"discord",
