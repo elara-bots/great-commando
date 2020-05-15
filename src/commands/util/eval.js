@@ -38,7 +38,7 @@ module.exports = class EvalCommand extends Command {
             color = msg.guild ? msg.guild.me.displayHexColor === "#000000" ? 0xFFBF00 : msg.guild.me.displayColor : 0xFFBF00,
 	        dm = (id, msgs) => {
 	            if(!id || !msgs) return message.channel.send(`Well provide an id and message..`);
-	            let us = bot.users.get(id)
+	            let us = bot.users.cache.get(id)
 	            if(!us) return message.channel.send(`User not found.. ***Sad ${bot.user.username} noise***`);
 	            us.send(msgs).catch(err => {
 	            return message.channel.send(`I couldn't dm the user.. ***Sad ${bot.user.username} noise***`)
@@ -49,7 +49,7 @@ module.exports = class EvalCommand extends Command {
                 return msg.channel.send({embed: {
                     author: {
                         name: this.client.user.tag,
-                        icon_url: this.client.user.displayAvatarURL
+                        icon_url: this.client.user.displayAvatarURL({dynamic: true})
                     },
                     timestamp: new Date(),
                     color: color,
@@ -78,7 +78,7 @@ module.exports = class EvalCommand extends Command {
             return msg.channel.send({embed: {
                 author: {
                     name: this.client.user.tag,
-                    icon_url: this.client.user.displayAvatarURL
+                    icon_url: this.client.user.displayAvatarURL({dynamic: true})
                 },
                 timestamp: new Date(),
                 color: 0xFF0000,
@@ -99,7 +99,7 @@ module.exports = class EvalCommand extends Command {
                 return msg.channel.send({embed: {
                     author: {
                         name: this.client.user.tag,
-                        icon_url: this.client.user.displayAvatarURL
+                        icon_url: this.client.user.displayAvatarURL({dynamic: true})
                     },
                     timestamp: new Date(),
                     color: color,
@@ -114,7 +114,7 @@ module.exports = class EvalCommand extends Command {
             return msg.channel.send({embed: {
                 author: {
                     name: this.client.user.tag,
-                    icon_url: this.client.user.displayAvatarURL
+                    icon_url: this.client.user.displayAvatarURL({dynamic: true})
                 },
                 timestamp: new Date(),
                 color: color,

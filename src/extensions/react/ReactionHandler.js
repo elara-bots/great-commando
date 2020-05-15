@@ -1,4 +1,4 @@
-const { ReactionCollector, Message, RichEmbed } = require('discord.js');
+const { ReactionCollector, Message, MessageEmbed } = require('discord.js');
 /**
  * @extends ReactionCollector
  */
@@ -109,18 +109,18 @@ class ReactionHandler extends ReactionCollector {
 		else return this.stop();
 
 		this.on('collect', (reaction, user) => {
-			reaction.users.forEach(m => {
+			reaction.users.cache.forEach(m => {
 				if(m.id === this.client.user.id){
 					return;
 				}else{
-					reaction.remove(m.id)
+					reaction.users.remove(m.id)
 				}
 			})
 			this[this.methodMap.get(reaction.emoji.name)](user);
 		});
 		this.on('end', () => {
-			if (this.reactionsDone && !this.message.deleted) this.message.clearReactions().then(async () => {
-				let e = new RichEmbed()
+			if (this.reactionsDone && !this.message.deleted) this.message.reactions.removeAll().then(async () => {
+				let e = new MessageEmbed()
 				.setAuthor(' ', " ", " ")
 				.setTitle(`Menu Closed`)
 				.setDescription(' ')
@@ -132,7 +132,7 @@ class ReactionHandler extends ReactionCollector {
 				e.fields.forEach(c => c.pop())
 				
 				setTimeout(async () => {this.message.edit(e).then(async () => {
-				await this.message.delete(20000);
+				await this.message.delete({timeout: 20000});
 				})
 			}, 5000)
 			})
@@ -328,7 +328,7 @@ class ReactionHandler extends ReactionCollector {
 	 */
 	async _queueEmojiReactions(emojis) {
 		if (this.message.deleted) return this.stop();
-		if (this.ended) return this.message.clearReactions();
+		if (this.ended) return this.message.reactions.removeAll();
 		await this.message.react(emojis.shift());
 		if (emojis.length) return this._queueEmojiReactions(emojis);
 		this.reactionsDone = true;

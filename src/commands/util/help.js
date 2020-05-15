@@ -40,7 +40,7 @@ module.exports = class HelpCommand extends Command {
 		if(args.command === "groups") return msg.channel.send({embed: {
 			author: {
 				name: this.client.user.tag,
-				icon_url: this.client.user.displayAvatarURL
+				icon_url: this.client.user.displayAvatarURL({dynamic: true})
 			},
 			color: color,
 			title: `All Groups`,
@@ -58,7 +58,7 @@ module.exports = class HelpCommand extends Command {
                   if(cmd.userPermissions !== null) perms.push(`**User Permissions: **${cmd.userPermissions.join(", ")}`)
                   if(cmd.clientPermissions !== null) perms.push(`**Bot Permissions: **${cmd.clientPermissions.join(", ")}`)
                   let e = new Discord.RichEmbed()
-                  .setAuthor(user.tag, user.displayAvatarURL)
+                  .setAuthor(user.tag, user.displayAvatarURL({dynamic: true}))
                   .setColor(color)
                   .setTitle(`Command Help`)
                   .setDescription(`
@@ -71,11 +71,12 @@ module.exports = class HelpCommand extends Command {
              }
         }else{
             if(msg.guild){
-            let e = new Discord.RichEmbed().setAuthor(msg.guild.name, msg.guild.iconURL).setColor(color)
+            let e = new Discord.MessageEmbed().setAuthor(msg.guild.name, msg.guild.iconURL({dynamic: true})).setColor(color)
             let display = new RichDisplay(e)
             groups.forEach(g => {
+                if(["owner", "developer", "dev"].includes(g.id) && !this.client.isOwner(msg.author.id)) return null;
                 let commands = g.commands.map(c => `**${c.name}**${c.nsfw ? "(NSFW)" : ""} - ${c.description}`)
-                display.addPage(e => e.setDescription(`${commands.join('\n')}`).setTitle(g.name))
+                display.addPage(e => e.setDescription(commands.join('\n')).setTitle(g.name))
             });
             display.setFooterPrefix('Here are all of the commands you can use. Page: ')
             display.run(await msg.channel.send(`Loading...`), { filter: (reaction, user) => user.id === msg.author.id})
@@ -83,7 +84,7 @@ module.exports = class HelpCommand extends Command {
          return msg.direct({embed: {
 			 author: {
 				 name: this.client.user.tag,
-				 icon_url: this.client.user.displayAvatarURL
+				 icon_url: this.client.user.displayAvatarURL({dynamic: true})
 			 },
 			 title: "INFO",
 			 description: `This command can only be used in a server channel.`,

@@ -27,7 +27,7 @@ module.exports = class PingCommand extends Command {
 			e1 = {
 				author: {
 					name: this.client.user.tag,
-					icon_url: this.client.user.displayAvatarURL
+					icon_url: this.client.user.displayAvatarURL({dynamic: true})
 				},
 				color: color,
 				description: `${emojis.loading} Loading, one moment please.`,
@@ -37,13 +37,13 @@ module.exports = class PingCommand extends Command {
 	message.edit({embed: {
 		author: {
 			name: this.client.user.tag,
-			icon_url: this.client.user.displayAvatarURL
+			icon_url: this.client.user.displayAvatarURL({dynamic: true})
 		},
 		color: color,
 		title: `${emojis.bot} Status ${emojis.bot}`,
 		footer: {
 			text: msg.author.tag,
-			icon_url: msg.author.displayAvatarURL
+			icon_url: msg.author.displayAvatarURL({dynamic: true})
 		},
 		fields: [
 			{
@@ -53,7 +53,7 @@ module.exports = class PingCommand extends Command {
 			},
 			{
 				name: `API Latency`,
-				value: `${Math.round(this.client.ping)}ms`,
+				value: `${Math.round(this.client.ws.ping)}ms`,
 				inline: true
 			},
 			{

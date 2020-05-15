@@ -123,7 +123,7 @@ class CommandDispatcher {
 					return cmdMsg.say({embed: {
 						author: {
 							name: message.guild.name,
-							icon_url: message.guild.iconURL
+							icon_url: message.guild.iconURL({dynamic: true})
 						},
 						title: `INFO`,
 						description: content,

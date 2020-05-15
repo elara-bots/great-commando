@@ -9,9 +9,9 @@ class ChannelArgumentType extends ArgumentType {
 
 	validate(value, msg, arg) {
 		const matches = value.match(/^(?:<#)?([0-9]+)>?$/);
-		if(matches) return msg.guild.channels.has(matches[1]);
+		if(matches) return msg.guild.channels.cache.has(matches[1]);
 		const search = value.toLowerCase();
-		let channels = msg.guild.channels.filter(nameFilterInexact(search)).array();
+		let channels = msg.guild.channels.cache.filter(nameFilterInexact(search)).array();
 		if(channels.length === 0) return false;
 		if(channels.length === 1) {
 			if(arg.oneOf && !arg.oneOf.includes(channels[0].id)) return false;
@@ -30,9 +30,9 @@ class ChannelArgumentType extends ArgumentType {
 
 	parse(value, msg) {
 		const matches = value.match(/^(?:<#)?([0-9]+)>?$/);
-		if(matches) return msg.guild.channels.get(matches[1]) || null;
+		if(matches) return msg.guild.channels.cache.get(matches[1]) || null;
 		const search = value.toLowerCase();
-		const channels = msg.guild.channels.filter(nameFilterInexact(search)).array();
+		const channels = msg.guild.channels.cache.filter(nameFilterInexact(search)).array();
 		if(channels.length === 0) return null;
 		if(channels.length === 1) return channels[0];
 		const exactChannels = channels.filter(nameFilterExact(search));

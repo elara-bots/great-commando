@@ -1,4 +1,4 @@
-const { RichEmbed: Embed } = require('discord.js');
+const { MessageEmbed: Embed } = require('discord.js');
 const ReactionHandler = require('./ReactionHandler');
 
 class RichDisplay {

@@ -11,7 +11,7 @@ class UserArgumentType extends ArgumentType {
 		const matches = value.match(/^(?:<@!?)?([0-9]+)>?$/);
 		if(matches) {
 			try {
-				const user = await msg.client.fetchUser(matches[1]);
+				const user = await msg.client.users.fetch(matches[1]);
 				if(!user) return false;
 				if(arg.oneOf && !arg.oneOf.includes(user.id)) return false;
 				return true;
@@ -21,7 +21,7 @@ class UserArgumentType extends ArgumentType {
 		}
 		if(!msg.guild) return false;
 		const search = value.toLowerCase();
-		let members = msg.guild.members.filter(memberFilterInexact(search)).array();
+		let members = msg.guild.members.cache.filter(memberFilterInexact(search)).array();
 		if(members.length === 0) return false;
 		if(members.length === 1) {
 			if(arg.oneOf && !arg.oneOf.includes(members[0].id)) return false;
@@ -42,10 +42,10 @@ class UserArgumentType extends ArgumentType {
 
 	parse(value, msg) {
 		const matches = value.match(/^(?:<@!?)?([0-9]+)>?$/);
-		if(matches) return msg.client.users.get(matches[1]) || null;
+		if(matches) return msg.client.users.cache.get(matches[1]) || null;
 		if(!msg.guild) return null;
 		const search = value.toLowerCase();
-		const members = msg.guild.members.filter(memberFilterInexact(search)).array();
+		const members = msg.guild.members.cache.filter(memberFilterInexact(search)).array();
 		if(members.length === 0) return null;
 		if(members.length === 1) return members[0].user;
 		const exactMembers = members.filter(memberFilterExact(search));

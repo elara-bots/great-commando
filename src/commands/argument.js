@@ -184,7 +184,7 @@ class Argument {
 				color: 0xFFBF00,
 				author: {
 					name: msg.author.tag,
-					icon_url: msg.author.displayAvatarURL
+					icon_url: msg.author.displayAvatarURL({dynamic: true})
 				},
 				fields: [
 					{
@@ -194,7 +194,7 @@ class Argument {
 				],
 				footer: {
 					text: wait ? `This command will automatically timeout in ${this.wait} seconds.` : msg.client.user.tag,
-					icon_url: msg.client.user.displayAvatarURL
+					icon_url: msg.client.user.displayAvatarURL({dynamic: true})
 				}
 			}}));
 
@@ -283,7 +283,7 @@ class Argument {
 						color: 0xFFBF00,
 						author: {
 							name: msg.author.tag,
-							icon_url: msg.author.displayAvatarURL
+							icon_url: msg.author.displayAvatarURL({dynamic: true})
 						},
 						fields: [
 							{
@@ -293,7 +293,7 @@ class Argument {
 						],
 						footer: {
 							text: wait ? `This command will automatically timeout in ${this.wait} seconds.` : msg.client.user.tag,
-							icon_url: msg.client.user.displayAvatarURL
+							icon_url: msg.client.user.displayAvatarURL({dynamic: true})
 						}
 					}}));
 				} else if(results.length === 0) {
@@ -303,7 +303,7 @@ class Argument {
 						color: 0xFFBF00,
 						author: {
 							name: msg.author.tag,
-							icon_url: msg.author.displayAvatarURL
+							icon_url: msg.author.displayAvatarURL({dynamic: true})
 						},
 						fields: [
 							{
@@ -313,7 +313,7 @@ class Argument {
 						],
 						footer: {
 							text: wait ? `This command will automatically timeout in ${this.wait} seconds.` : msg.client.user.tag,
-							icon_url: msg.client.user.displayAvatarURL
+							icon_url: msg.client.user.displayAvatarURL({dynamic: true})
 						}
 					}}));
 				}

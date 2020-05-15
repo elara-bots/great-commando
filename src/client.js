@@ -66,7 +66,7 @@ class CommandoClient extends discord.Client {
 			let embed = {
 				author: {
 					name: msg.author.tag,
-					icon_url: msg.author.displayAvatarURL
+					icon_url: msg.author.displayAvatarURL({dynamic: true})
 				},
 				color: 0xFFBF00,
 				description: content,
@@ -98,13 +98,13 @@ class CommandoClient extends discord.Client {
 			this.once('ready', () => {
 				if(options.owner instanceof Array || options.owner instanceof Set) {
 					for(const owner of options.owner) {
-						this.fetchUser(owner).catch(err => {
+						this.users.fetch(owner).catch(err => {
 							this.emit('warn', `Unable to fetch owner ${owner}.`);
 							this.emit('error', err);
 						});
 					}
 				} else {
-					this.fetchUser(options.owner).catch(err => {
+					this.users.fetch(options.owner).catch(err => {
 						this.emit('warn', `Unable to fetch owner ${options.owner}.`);
 						this.emit('error', err);
 					});
@@ -138,9 +138,9 @@ class CommandoClient extends discord.Client {
 	 */
 	get owners() {
 		if(!this.options.owner) return null;
-		if(typeof this.options.owner === 'string') return [this.users.get(this.options.owner)];
+		if(typeof this.options.owner === 'string') return [this.users.cache.get(this.options.owner)];
 		const owners = [];
-		for(const owner of this.options.owner) owners.push(this.users.get(owner));
+		for(const owner of this.options.owner) owners.push(this.users.cache.get(owner));
 		return owners;
 	}
 
