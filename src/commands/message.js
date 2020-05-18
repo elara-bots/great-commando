@@ -4,7 +4,7 @@ const Command = require('./base');
 const FriendlyError = require('../errors/friendly');
 const CommandFormatError = require('../errors/command-format');
 const { permissions } = require('../util');
-
+let CommandCooldown = new Set();
 /** A container for a message that triggers a command, that command, and methods to respond */
 class CommandMessage {
 	/**
@@ -119,6 +119,9 @@ class CommandMessage {
 			!this.message.webhookID) {
 			this.message.member = await this.message.guild.fetchMember(this.message.author);
 		}
+		if(CommandCooldown.has(this.message.author.id)) return null;
+		CommandCooldown.add(this.message.author.id)
+		setTimeout(() => {CommandCooldown.delete(this.message.author.id)}, 5000)
 			let send = (content, color) => {
 			let embed = {embed: {
 				author: {
