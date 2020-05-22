@@ -109,18 +109,26 @@ class ReactionHandler extends ReactionCollector {
 		else return this.stop();
 
 		this.on('collect', (reaction, user) => {
-			reaction.users.forEach(m => {
-				if(m.id === this.client.user.id){
-					return;
-				}else{
-					reaction.remove(m.id)
-				}
-			})
+			if(this.message.channel.type !== "dm"){
+			if(this.message.channel.permissionsFor(this.message.guild.me).has("MANAGE_MESSAGES")){
+            let users = reaction.users.filter(c => c.id !== this.client.user.id);
+            if(users.size !== 0){
+                for (const user of users.array()){
+                    reaction.remove(user.id).catch(() => {});
+                }
+            }
+			}
+			}
 			this[this.methodMap.get(reaction.emoji.name)](user);
 		});
 		this.on('end', () => {
-			if (this.reactionsDone && !this.message.deleted) this.message.clearReactions().then(async () => {
-				let e = new RichEmbed()
+			if (this.reactionsDone && !this.message.deleted){
+                if(this.message.channel.type !== "dm"){
+                    if(this.message.channel.permissionsFor(this.message.guild.me).has("MANAGE_MESSAGES")){
+                        this.message.clearReactions();
+                    };
+                };
+                let e = new RichEmbed()
 				.setAuthor(' ', " ", " ")
 				.setTitle(`Menu Closed`)
 				.setDescription(' ')
@@ -130,12 +138,9 @@ class ReactionHandler extends ReactionCollector {
 				.setImage(' ')
 				.setURL(' ')
 				e.fields.forEach(c => c.pop())
-				
-				setTimeout(async () => {this.message.edit(e).then(async () => {
-				await this.message.delete(20000);
-				})
-			}, 5000)
-			})
+                this.message.edit(e);
+                this.message.delete(22000).catch(() => {});
+            }
 		});
 	}
 
