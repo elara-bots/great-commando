@@ -11,7 +11,7 @@ class MessageArgumentType extends ArgumentType {
 	}
 
 	parse(value, msg) {
-		return msg.channel.messages.get(value);
+		return msg.channel.messages.cache.get(value);
 	}
 }
 
